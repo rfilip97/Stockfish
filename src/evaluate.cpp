@@ -259,6 +259,7 @@ namespace {
   constexpr Score BishopOnKingRing    = S( 24,  0);
   constexpr Score BishopXRayPawns     = S(  4,  5);
   constexpr Score CorneredBishop      = S( 50, 50);
+  Score ConnectedRooks                = S( 15, 20);
   constexpr Score FlankAttacks        = S(  8,  0);
   constexpr Score Hanging             = S( 69, 36);
   constexpr Score KnightOnQueen       = S( 16, 11);
@@ -277,6 +278,7 @@ namespace {
   constexpr Score WeakQueenProtection = S( 14,  0);
   constexpr Score WeakQueen           = S( 56, 15);
 
+  TUNE(SetRange(0, 100), ConnectedRooks);
 
 #undef S
 
@@ -484,6 +486,10 @@ namespace {
 
         if (Pt == ROOK)
         {
+            if(attacks_bb<ROOK>(s, pos.pieces()) & pos.pieces(Us, ROOK)){
+                score += ConnectedRooks;
+            }
+
             // Bonuses for rook on a (semi-)open or closed file
             if (pos.is_on_semiopen_file(Us, s))
             {
